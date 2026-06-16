@@ -1,11 +1,18 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const connectDB = require('./connect_db');
 const Product = require('./model/product');
 const User = require('./model/user');
+const protect = require('./middleware/auth');
+require('dotenv').config();
+
 const app = express();
 const PORT = 4000;
-// Middleware: parse JSON bodies
+
 app.use(express.json());
+app.use(cookieParser());
+
 const posts = require('./posts.json');
 
 // A simple route
@@ -90,7 +97,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// Login — verify password with bcrypt
+// Login — verify password, issue JWT stored in cookie + returned for localStorage
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -102,7 +109,23 @@ app.post('/login', async (req, res) => {
     if (!match) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-    res.json({ _id: user._id, name: user.name, email: user.email });
+
+    const token = jwt.sign(
+      { _id: user._id, name: user.name, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Store in HTTP-only cookie (server-side sessions / mobile clients)
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000  // 7 days in ms
+    });
+
+    // Also return token in body so the client can save it to localStorage
+    res.json({ _id: user._id, name: user.name, email: user.email, token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -142,6 +165,17 @@ app.delete('/users/:id', async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
+});
+
+// Protected route — requires valid JWT
+app.get('/profile', protect, (req, res) => {
+  res.json({ message: 'Access granted', user: req.user });
+});
+
+// Logout — clear the cookie
+app.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.json({ message: 'Logged out successfully' });
 });
 
 //connect to the database and start the server
