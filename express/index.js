@@ -75,7 +75,7 @@ app.put('/update-product/:id', async (req, res) => {
 // --- User routes ---
 
 // Register a new user (password is hashed via pre-save hook)
-app.post('/register', async (req, res,next) => {
+app.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const existing = await User.findOne({ email });
