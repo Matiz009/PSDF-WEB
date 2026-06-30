@@ -1,29 +1,24 @@
-import Card from "./components/Card";
-import posts from './assets/posts.json';
-import users from './assets/users.json';
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Table from "./components/Table";
-import Hero from "./components/Hero";
-function App() {
-  console.log(posts);
-  
+import React from 'react'
+import Home from './components/Home'
+import { BrowserRouter,Routes,Route } from 'react-router-dom'
+import About from './components/About'
+import Contact from './components/Contact'
+import Posts from './components/Posts'
+import PostDetails from './components/PostDetails'
+
+const App = () => {
   return (
-    <>
-    <Header/>
-    <Hero/>
-      {posts.map((post) => (
-        <Card 
-          key={post.id} // Always provide a unique key at the top level of mapped items
-          title={post.title} 
-          body={post.body} 
-          id={post.id} 
-        />
-      ))}
-      <Table users={users}/>
-      <Footer/>
-    </>
-  );
+  
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Home/>} />
+      <Route path='/about' element={<About/>} />
+      <Route path='/contact' element={<Contact/>} />
+      <Route path='/posts' element={<Posts/>} />
+      <Route path='/posts/:id' element={<PostDetails/>} />
+    </Routes>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App

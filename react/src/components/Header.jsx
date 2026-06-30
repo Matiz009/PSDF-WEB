@@ -1,6 +1,6 @@
-import React from 'react'
+import { Link } from "react-router-dom"
 
-const Menu = () => {
+const Menu = ({ isDarkMode, onToggleTheme }) => {
   return (
     <div>
         <header>
@@ -103,17 +103,38 @@ const Menu = () => {
                      className="hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">Blog</a>
                </li>
                <li>
-                  <a href="#"
-                     className="hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">About</a>
+                  <Link to="/about"
+                     className="hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">About</Link>
                </li>
                <li>
-                  <a href="#"
-                     className="hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">Contact</a>
+                  <Link to="/contact"
+                     className="hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">Contact</Link>
+               </li>
+               <li>
+                  <Link to="/posts"
+                     className="hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">Posts</Link>
                </li>
             </ul>
          </div>
 
          <div className="flex items-center gap-4">
+            <button
+               type="button"
+               onClick={onToggleTheme}
+               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-slate-100 dark:hover:bg-neutral-700"
+               aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+               title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+            >
+               {isDarkMode ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 3v2.25m0 13.5V21m9-9h-2.25M5.25 12H3m15.36-6.36-1.59 1.59M7.23 16.77l-1.59 1.59m12.72 0-1.59-1.59M7.23 7.23 5.64 5.64M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5z" />
+                  </svg>
+               ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M21 12.79A8.25 8.25 0 1 1 11.21 3a6.75 6.75 0 0 0 9.79 9.79z" />
+                  </svg>
+               )}
+            </button>
             <a href="#"
                className="py-2 px-3.5 text-sm rounded-md font-semibold cursor-pointer text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">Sign
                up</a>
